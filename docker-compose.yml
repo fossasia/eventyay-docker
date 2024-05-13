@@ -1,0 +1,58 @@
+version: '3'
+services:
+  pretalx:
+    image: eventyay/eventyay-talk:development
+    container_name: eventyay-talk
+    restart: unless-stopped
+    depends_on: 
+      - redis
+      - db
+    environment:
+      PRETALX_FILESYSTEM_MEDIA: /public/media
+      PRETALX_FILESYSTEM_STATIC: /public/static
+    volumes: 
+      - ./pretalx.cfg:/etc/pretalx/pretalx.cfg:ro
+      - pretalx-data:/data
+      - pretalx-public:/public
+    ports:
+      - "127.0.0.1:8355:80"
+
+  pretix:
+    image: eventyay/eventyay-tickets:development
+    container_name: eventyay-tickets
+    restart: unless-stopped
+    depends_on:
+      - db
+      - redis
+    ports:
+      - "127.0.0.1:8455:80"
+    volumes:
+      - ./pretix.cfg:/etc/pretix/pretix.cfg:ro
+      - pretix-data:/data
+      - pretix-src:/pretix/src
+  
+  db:
+    image: postgis/postgis:12-2.5-alpine
+    container_name: pretalx-db
+    restart: unless-stopped
+    volumes:
+      - pretalx-db:/var/lib/mysql
+    environment:
+      POSTGRES_USER: postgres_db_user_changeme
+      POSTGRES_PASSWORD: postgres_db_pwd_chaneme
+      POSTGRES_DB: eventyay_db
+
+  redis:
+    image: redis:latest
+    container_name: pretalx-redis
+    restart: unless-stopped
+    volumes: 
+      - pretalx-redis:/data
+
+volumes:
+  pretalx-db:
+  pretalx-data:
+  pretalx-public:
+  pretalx-redis:
+  pretix-data:
+  pretix-src:
