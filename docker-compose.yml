@@ -37,10 +37,10 @@ services:
   
   db:
     image: postgis/postgis:12-2.5-alpine
-    container_name: pretalx-db
+    container_name: db
     restart: unless-stopped
     volumes:
-      - pretalx-db:/var/lib/postgres
+      - db:/var/lib/postgres
     environment:
       POSTGRES_USER: postgres_db_user_changeme
       POSTGRES_PASSWORD: postgres_db_pwd_changeme
@@ -61,7 +61,7 @@ services:
       test: [ "CMD", "redis-cli", "--raw", "incr", "ping" ]
 
 volumes:
-  pretalx-db:
+  db:
   pretalx-data:
   pretalx-public:
   pretalx-redis:
