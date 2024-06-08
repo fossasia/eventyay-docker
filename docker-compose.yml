@@ -36,7 +36,7 @@ services:
     container_name: pretalx-db
     restart: unless-stopped
     volumes:
-      - pretalx-db:/var/lib/mysql
+      - pretalx-db:/var/lib/postgres
     environment:
       POSTGRES_USER: postgres_db_user_changeme
       POSTGRES_PASSWORD: postgres_db_pwd_chaneme
