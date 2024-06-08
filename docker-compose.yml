@@ -5,8 +5,10 @@ services:
     container_name: eventyay-talk
     restart: unless-stopped
     depends_on: 
-      - redis
-      - db
+      redis:
+        condition: service_healthy
+      db:
+        condition: service_healthy
     environment:
       PRETALX_FILESYSTEM_MEDIA: /public/media
       PRETALX_FILESYSTEM_STATIC: /public/static
@@ -22,8 +24,10 @@ services:
     container_name: eventyay-tickets
     restart: unless-stopped
     depends_on:
-      - db
-      - redis
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
     ports:
       - "127.0.0.1:8455:80"
     volumes:
@@ -36,11 +40,16 @@ services:
     container_name: pretalx-db
     restart: unless-stopped
     volumes:
-      - pretalx-db:/var/lib/mysql
+      - pretalx-db:/var/lib/postgres
     environment:
       POSTGRES_USER: postgres_db_user_changeme
-      POSTGRES_PASSWORD: postgres_db_pwd_chaneme
+      POSTGRES_PASSWORD: postgres_db_pwd_changeme
       POSTGRES_DB: eventyay_db
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   redis:
     image: redis:latest
@@ -48,6 +57,8 @@ services:
     restart: unless-stopped
     volumes: 
       - pretalx-redis:/data
+    healthcheck:
+      test: [ "CMD", "redis-cli", "--raw", "incr", "ping" ]
 
 volumes:
   pretalx-db:
