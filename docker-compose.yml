@@ -43,7 +43,7 @@ services:
       - pretalx-db:/var/lib/postgres
     environment:
       POSTGRES_USER: postgres_db_user_changeme
-      POSTGRES_PASSWORD: postgres_db_pwd_chaneme
+      POSTGRES_PASSWORD: postgres_db_pwd_changeme
       POSTGRES_DB: eventyay_db
     healthcheck:
       test: ["CMD-SHELL", "pg_isready"]
