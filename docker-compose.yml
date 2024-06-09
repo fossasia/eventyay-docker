@@ -40,13 +40,13 @@ services:
     container_name: db
     restart: unless-stopped
     volumes:
-      - db:/var/lib/postgres
+      - db:/var/lib/postgresql/data
     environment:
       POSTGRES_USER: postgres_db_user_changeme
       POSTGRES_PASSWORD: postgres_db_pwd_changeme
       POSTGRES_DB: eventyay_db
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready"]
+    healthcheck: # TODO why can we not use $POSTGRES_USER and $POSTGRES_DB here, since it is in the env?
+      test: ["CMD-SHELL", 'pg_isready -U postgres_db_user_changeme -d eventyay_db']
       interval: 10s
       timeout: 5s
       retries: 5
