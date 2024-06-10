@@ -33,8 +33,7 @@ services:
     volumes:
       - ./pretix.cfg:/etc/pretix/pretix.cfg:ro
       - pretix-data:/data
-      - pretix-src:/pretix/src
-  
+
   db:
     image: postgis/postgis:12-2.5-alpine
     container_name: db
