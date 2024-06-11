@@ -1,6 +1,6 @@
 version: '3'
 services:
-  pretalx:
+  eventyay-talk:
     image: eventyay/eventyay-talk:development
     container_name: eventyay-talk
     restart: unless-stopped
@@ -19,9 +19,9 @@ services:
     ports:
       - "127.0.0.1:8355:80"
 
-  pretix:
-    image: eventyay/eventyay-tickets:development
-    container_name: eventyay-tickets
+  eventyay-ticket:
+    image: eventyay/eventyay-ticket:development
+    container_name: eventyay-ticket
     restart: unless-stopped
     depends_on:
       db:
@@ -41,10 +41,11 @@ services:
     restart: unless-stopped
     volumes:
       - db:/var/lib/postgresql/data
+      - ./docker-postgresql-multiple-databases:/docker-entrypoint-initdb.d
     environment:
       POSTGRES_USER: postgres_db_user_changeme
       POSTGRES_PASSWORD: postgres_db_pwd_changeme
-      POSTGRES_DB: eventyay_db
+      POSTGRES_MULTIPLE_DATABASES: eventyay_db,eventyay_ticket_db
     healthcheck: # TODO why can we not use $POSTGRES_USER and $POSTGRES_DB here, since it is in the env?
       test: ["CMD-SHELL", 'pg_isready -U postgres_db_user_changeme -d eventyay_db']
       interval: 10s
@@ -53,7 +54,7 @@ services:
 
   redis:
     image: redis:latest
-    container_name: pretalx-redis
+    container_name: redis
     restart: unless-stopped
     volumes: 
       - pretalx-redis:/data
