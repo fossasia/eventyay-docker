@@ -130,6 +130,17 @@ services:
       - video
       - video-webapp
 
+  watchtower:
+    image: containrrr/watchtower
+    container_name: eventyay-watchtower
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    restart: always
+    environment:
+      WATCHTOWER_NOTIFICATIONS: 'shoutrrr'
+      WATCHTOWER_NOTIFICATION_URL: ${WATCHTOWER_NOTIFICATION_URL}
+    command: watchtower eventyay-talk eventyay-ticket eventyay-video eventyay-video-webapp --cleanup --interval 600
+
 # volumes for redis that can be dropped and don't need moving
 volumes:
   rd:
