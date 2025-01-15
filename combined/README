@@ -1,0 +1,57 @@
+Setup of EventYay via docker compose
+====================================
+
+add the following entries to your /etc/hosts file, or
+change all the hostnames in various config files in docker-compose.yaml
+and config/**
+	127.0.0.1       app.eventyay.com
+	127.0.0.1       video.eventyay.com
+
+create an .env file, example is .env.example which currently contains
+	POSTGRES_USER=CHANGEME_eyadmin
+	POSTGRES_PASSWORD=CHANGEME_eypass
+	VOLUMES_DIR=./data
+	CONFIG_DIR=./config
+
+create the VOLUMES_DIR
+
+create
+	data/talk/data
+	data/ticket/data
+	data/video/data
+	data/video-webapp/public
+and make them 0777 (ugo+rwx !!!)
+
+
+run
+	docker compose up -d
+
+wait and watch
+	docker compose logs -f
+
+
+when the building of all files settled:
+
+log into eventyay-ticket and make initial setup
+	docker exec -ti eventyay-ticket bash
+
+	> cd
+	> pretix createsuperuser
+
+this creates also the talk superuser!!!
+
+DO NOT ACCESS THE WEB PAGES BY NOW !!!!
+
+log into eventyay-talk and make initial setup
+ 	docker exec -ti eventyay-talk bash
+
+	> cd
+	> pretalx init
+
+and use the same email and password as in pretix!!!!
+
+
+
+no idea what needs to be done for eventyay-video
+
+
