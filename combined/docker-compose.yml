@@ -105,7 +105,7 @@ services:
     healthcheck:
       test: [ "CMD", "redis-cli", "--raw", "incr", "ping" ]
 
-  nginx:
+  nginx: # this is nginx + certbot, see https://github.com/JonasAlfredsson/docker-nginx-certbot
     restart: always
     image: jonasal/nginx-certbot:latest
     container_name: eventyay-nginx
