@@ -1,0 +1,70 @@
+Steps to set up a development environment for all eventyay components
+======================================================================
+
+This guide will show you how to ....
+
+Make forks of all necessary repositories
+----------------------------------------
+
+* https://github.com/fossasia/eventyay-tickets
+* https://github.com/fossasia/eventyay-talk
+* https://github.com/fossasia/eventyay-video
+* https://github.com/fossasia/eventyay-docker
+
+
+Clone all repositories
+----------------------
+
+Prepare a work directory $WORKDIR where all development will happen.
+```
+mkdir -p $WORKDIR
+cd $WORKDIR
+```
+
+We assume that
+	FOSSASIA_GITHUB=https://github.com/fossasia
+and
+	PERSONAL_GITHUB=git@github.com:<YOUR_GITHUB_USERNAME>
+which allows pushing branches to your personal github.
+
+First clone the `eventyay-docker` repository and add your personal
+github remote
+```
+git clone $FOSSASIA_GITHUB/eventyay-docker
+git remote add personal $PERSONAL_GITHUB/eventyay-docker.git
+git fetch personal
+```
+
+Next, clone the other repos
+```
+# clone all the FOSSASIA repos
+git clone $FOSSASIA_GITHUB/eventyay-talk
+git clone $FOSSASIA_GITHUB/eventyay-tickets
+git clone $FOSSASIA_GITHUB/eventyay-video
+git clone $FOSSASIA_GITHUB/eventyay-docker
+```
+
+Add your personal clone a the `personal` remote:
+
+```
+for repo in eventyay-talk eventyay-tickets eventyay-video eventyay-docker ; do
+  cd $repo
+  git remote add personal $PERSONAL_GITHUB/$repo.git
+  git fetch personal
+done
+```
+
+All the checked out repos (but eventyay-docker)  should default
+to the `development` branch.
+
+If you do new development, checkout a branch from the current 
+and up-to-date `development` branch.
+
+
+
+Build develop oriented images
+
+```
+docker buildx build -f Dockerfile --build-arg UID=`id -u` --build-arg GID=`id -g` \
+	--progress=plain -t eventyay/eventyay-talk:local .
+```
