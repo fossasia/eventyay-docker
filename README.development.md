@@ -27,9 +27,13 @@ cd $WORKDIR
 ```
 
 We assume that
+```
 	FOSSASIA_GITHUB=https://github.com/fossasia
+```
 and
+```
 	PERSONAL_GITHUB=git@github.com:<YOUR_GITHUB_USERNAME>
+```
 which allows pushing branches to your personal github.
 
 First, clone all repos
