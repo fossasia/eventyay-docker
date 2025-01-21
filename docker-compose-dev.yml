@@ -34,7 +34,7 @@ services:
       - ${EVENTYAY_TICKET_REPO}/deployment/docker/production_settings.py:/pretix/src/production_settings.py
 
   video:
-    image: eventyay/eventyay-video:main
+    image: eventyay/eventyay-video:local
     container_name: eventyay-video
     ports:
       - "8375:80"
@@ -52,11 +52,12 @@ services:
     volumes:
       - ${CONFIG_DIR}/video/venueless.cfg:/etc/venueless/venueless.cfg:ro
       - ${VOLUMES_DIR}/video/data:/data
+      - ${EVENTYAY_VIDEO_REPO}:/venueless
     entrypoint: ["/usr/local/bin/venueless"]
-    command: ["all"]
+    command: ["devel"]  # this translates to calling `pretix devel` for startup
 
   video-webapp:
-    image: eventyay/eventyay-video:main
+    image: eventyay/eventyay-video:local
     container_name: eventyay-video-webapp
     ports:
       - "8002:8880"
@@ -65,6 +66,7 @@ services:
     entrypoint: [""]
     volumes:
       - ${VOLUMES_DIR}/video-webapp/public:/public
+      - ${EVENTYAY_VIDEO_REPO}:/venueless
     command: ["npm", "start", "--", "--host", "0.0.0.0"]
     working_dir: /venueless/webapp
 
