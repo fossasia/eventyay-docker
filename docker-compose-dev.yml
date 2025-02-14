@@ -1,0 +1,155 @@
+name: eventyay
+
+services:
+
+  talk:
+    image: eventyay/eventyay-talk:local
+    container_name: eventyay-talk
+    restart: unless-stopped
+    command: devel  # this translates to calling `pretalx devel` for startup
+    depends_on:
+      - postgres
+      - redis
+    volumes:
+      - ${CONFIG_DIR}/talk/pretalx.cfg:/etc/pretalx/pretalx.cfg:ro
+      - ${VOLUMES_DIR}/talk/data:/data
+      - ${EVENTYAY_TALK_REPO}:/pretalx
+    ports:
+      - "8355:80"
+
+  ticket:
+    image: eventyay/eventyay-ticket:local
+    container_name: eventyay-ticket
+    restart: unless-stopped
+    command: devel  # this translates to calling `pretix devel` for startup
+    depends_on:
+      - postgres
+      - redis
+    ports:
+      - "8455:80"
+    volumes:
+      - ${CONFIG_DIR}/ticket/pretix.cfg:/etc/pretix/pretix.cfg:ro
+      - ${VOLUMES_DIR}/ticket/data:/data
+      - ${EVENTYAY_TICKET_REPO}:/pretix
+      - ${EVENTYAY_TICKET_REPO}/deployment/docker/production_settings.py:/pretix/src/production_settings.py
+
+  video:
+    image: eventyay/eventyay-video:local
+    container_name: eventyay-video
+    ports:
+      - "8375:80"
+    environment:
+      - DJANGO_SETTINGS_MODULE=venueless.settings
+      - LC_ALL=C.UTF-8
+      - IPYTHONDIR=/data/.ipython
+      - VENUELESS_REDIS_URLS=redis://redis/6,redis://redis1/0
+      - VENUELESS_DATA_DIR=/data
+      - VENUELESS_REDIS_USE_PUBSUB=true
+    depends_on:
+      - postgres
+      - redis
+      - redis1
+    volumes:
+      - ${CONFIG_DIR}/video/venueless.cfg:/etc/venueless/venueless.cfg:ro
+      - ${VOLUMES_DIR}/video/data:/data
+      - ${EVENTYAY_VIDEO_REPO}:/venueless
+    entrypoint: ["/usr/local/bin/venueless"]
+    command: ["devel"]  # this translates to calling `pretix devel` for startup
+
+  video-webapp:
+    image: eventyay/eventyay-video:local
+    container_name: eventyay-video-webapp
+    ports:
+      - "8002:8880"
+    environment:
+      - NODE_OPTIONS=--openssl-legacy-provider
+    entrypoint: [""]
+    volumes:
+      - ${VOLUMES_DIR}/video-webapp/public:/public
+      - ${EVENTYAY_VIDEO_REPO}:/venueless
+    command: ["npm", "start", "--", "--host", "0.0.0.0"]
+    working_dir: /venueless/webapp
+
+
+  postgres:
+    image: postgis/postgis:15-3.5
+    container_name: eventyay-postgres
+    restart: unless-stopped
+    volumes:
+      - ${VOLUMES_DIR}/postgres/data:/var/lib/postgresql/data
+      - ${CONFIG_DIR}/postgres/docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d
+    environment:
+      # the following where in the original eventyay-video docker-compose.yaml
+      # but I am not sure why they are necessary
+      # POSTGRES_INITDB_ARGS: --auth-host=md5
+      # POSTGRES_HOST_AUTH_METHOD: md5
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_MULTIPLE_DATABASES: ey_ticket_db,ey_talk_db,ey_video_db
+    healthcheck:
+      test: ["CMD-SHELL", 'pg_isready -U ${POSTGRES_USER} -d ey_talk_db']
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:latest
+    container_name: eventyay-redis
+    restart: unless-stopped
+    volumes:
+      - rd:/data
+    healthcheck:
+      test: [ "CMD", "redis-cli", "--raw", "incr", "ping" ]
+
+  # eventyay-video uses two different redis servers, the first is
+  # for celery, while the second for whatever
+  redis1:
+    image: redis:latest
+    container_name: eventyay-redis1
+    restart: unless-stopped
+    volumes:
+      - rd1:/data
+    healthcheck:
+      test: [ "CMD", "redis-cli", "--raw", "incr", "ping" ]
+
+  nginx: # this is nginx + certbot, see https://github.com/JonasAlfredsson/docker-nginx-certbot
+    restart: always
+    image: jonasal/nginx-certbot:latest
+    container_name: eventyay-nginx
+    ports:
+      - 80:80
+      - 443:443
+      - 8443:8443
+    volumes:
+      - ${CONFIG_DIR}/nginx/letsencrypt:/etc/letsencrypt
+      - ${CONFIG_DIR}/nginx/user_conf/:/etc/nginx/user_conf.d/:ro
+      - ${VOLUMES_DIR}/talk/data:/talk-data
+      - ${VOLUMES_DIR}/ticket/data:/ticket-data
+    env_file:
+      - ${CONFIG_DIR}/nginx/nginx-certbot.env
+    environment: # only those overriding the defaults in the nginx-certbot.env above
+      - CERTBOT_EMAIL=norbert@preining.info
+      # - CERTBOT_AUTHENTICATOR=dns-cloudflare
+      # make sure we run against local auto-generated CA
+      - USE_LOCAL_CA=1
+    depends_on:
+      - talk
+      - ticket
+      - video
+      - video-webapp
+
+  watchtower:
+    image: containrrr/watchtower
+    container_name: eventyay-watchtower
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    restart: always
+    environment:
+      WATCHTOWER_NOTIFICATIONS: 'shoutrrr'
+      WATCHTOWER_NOTIFICATION_URL: ${WATCHTOWER_NOTIFICATION_URL}
+    command: watchtower eventyay-talk eventyay-ticket eventyay-video eventyay-video-webapp --cleanup --interval 600
+
+# volumes for redis that can be dropped and don't need moving
+volumes:
+  rd:
+  rd1:
