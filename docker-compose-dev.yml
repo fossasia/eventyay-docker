@@ -119,6 +119,7 @@ services:
     ports:
       - 80:80
       - 443:443
+      - 8443:8443
     volumes:
       - ${CONFIG_DIR}/nginx/letsencrypt:/etc/letsencrypt
       - ${CONFIG_DIR}/nginx/user_conf/:/etc/nginx/user_conf.d/:ro

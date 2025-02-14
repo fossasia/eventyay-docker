@@ -61,15 +61,6 @@ to the `development` branch.
 If you do new development, checkout a branch from the current 
 and up-to-date `development` branch.
 
-WARNING: For now you have to checkout the branch `docker-dev` in all the repos:
-```
-for repo in eventyay-talk eventyay-tickets eventyay-video eventyay-docker ; do
-  cd $repo
-  git checkout docker-dev
-done
-```
-
-
 
 Build develop oriented images
 -----------------------------
