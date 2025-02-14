@@ -51,6 +51,17 @@ log into eventyay-talk and make initial setup
 and use the same email and password as in pretix!!!!
 
 
+After that:
+* log into tickets
+* create SSO OAUTH key under Admin -> SSO Key for the correct domain
+* save client id and secret to pretix.cfg
+
+Start from scratch
+* the redis volumes need to be removed
+	maybe only necessary when changing server name
+* always do first the superuser setup as laid out above
+
+
 
 no idea what needs to be done for eventyay-video
 
