@@ -68,7 +68,7 @@ Build develop oriented images
 ```
 cd eventyay-talk
 make local
-cd ../eventyay-ticket
+cd ../eventyay-tickets
 make local
 cd ../eventyay-video
 make local
