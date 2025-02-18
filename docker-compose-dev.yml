@@ -7,6 +7,8 @@ services:
     container_name: eventyay-talk
     restart: unless-stopped
     command: devel  # this translates to calling `pretalx devel` for startup
+    environment:
+      - GUNICORN_WORKERS=2
     depends_on:
       - postgres
       - redis
@@ -27,6 +29,8 @@ services:
       - redis
     ports:
       - "8455:80"
+    environment:
+      - NUM_WORKERS=2
     volumes:
       - ${CONFIG_DIR}/ticket/pretix.cfg:/etc/pretix/pretix.cfg:ro
       - ${VOLUMES_DIR}/ticket/data:/data
@@ -45,6 +49,7 @@ services:
       - VENUELESS_REDIS_URLS=redis://redis/6,redis://redis1/0
       - VENUELESS_DATA_DIR=/data
       - VENUELESS_REDIS_USE_PUBSUB=true
+      - VENUELESS_WORKERS=2
     depends_on:
       - postgres
       - redis
@@ -63,6 +68,7 @@ services:
       - "8002:8880"
     environment:
       - NODE_OPTIONS=--openssl-legacy-provider
+      - VENUELESS_WORKERS=2
     entrypoint: [""]
     volumes:
       - ${VOLUMES_DIR}/video-webapp/public:/public
