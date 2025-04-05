@@ -96,7 +96,9 @@ NODE_OPTIONS=--openssl-legacy-provider npm run build
 
 Create the necessary data directories
 -------------------------------------
-Create the directories inside `eventyay-docker/`
+*Timestamp: [15:51](https://youtu.be/w5pqJAnIG3M?si=1QOQw-tIhuPXBjlR&t=951)*  
+Ensure you are inside the `eventyay-docker/` directory before creating the following directories:  
+
 ```
 mkdir -p data/{postgres,talk,ticket,video,video-webapp}
 mkdir data/{talk,ticket,video}/data
