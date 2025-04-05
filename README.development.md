@@ -8,6 +8,12 @@ Prerequisites
 -------------
 docker, docker compose, npm, git
 
+
+EventYay Setup - FOSSASIA Summit 2025
+-------------------------------------------
+https://www.youtube.com/watch?v=w5pqJAnIG3M
+
+
 Make forks of all necessary repositories
 ----------------------------------------
 
@@ -90,6 +96,7 @@ NODE_OPTIONS=--openssl-legacy-provider npm run build
 
 Create the necessary data directories
 -------------------------------------
+Create the directories inside `eventyay-docker/`
 ```
 mkdir -p data/{postgres,talk,ticket,video,video-webapp}
 mkdir data/{talk,ticket,video}/data
