@@ -116,8 +116,8 @@ cp .env.example .env
 Add the following entries to your `/etc/hosts` file:
 
 ```
-grep -qxF "127.0.0.1  app.eventyay.com" /etc/hosts || echo "127.0.0.1  app.eventyay.com" | sudo tee -a /etc/hosts > /dev/null
-grep -qxF "127.0.0.1  video.eventyay.com" /etc/hosts || echo "127.0.0.1  video.eventyay.com" | sudo tee -a /etc/hosts > /dev/null
+grep -qxF "127.0.0.1  app.eventyay.com" /etc/hosts || echo "127.0.0.1  app.eventyay.com" | sudo tee -a /etc/hosts
+grep -qxF "127.0.0.1  video.eventyay.com" /etc/hosts || echo "127.0.0.1  video.eventyay.com" | sudo tee -a /etc/hosts
 ```
 
 Alternatively, you can change all hostnames in the configuration files in `docker-compose.yaml` and `config/**`.
@@ -132,26 +132,42 @@ docker compose -f docker-compose-dev.yml up -d
 
 ### 2. Initial User Setup
 
-Create superuser accounts:
+⚠️ **Critical:** Use identical email address and password for both the pretix and pretalx superusers. The systems are integrated and rely on matching credentials. Avoid root access as it can cause configuration issues.
 
+### Create ticket superuser in the eventyay-ticket container
 ```bash
-# Create ticket superuser
-docker exec -ti eventyay-ticket bash -c "cd ~ && pretix createsuperuser && exit"
+# Execute this command in your host terminal to enter the ticket container
+docker exec -ti eventyay-ticket bash
 ```
+
+>  Once inside the container, run:
+>  ```bash
+>  # Create a superuser account for the ticket system
+>  cd ~
+>  pretix createsuperuser
+>  # Type 'exit' when finished to return to your host terminal
+>  exit
+>  ```
 
 **IMPORTANT: Do not access the web pages yet!**
 
+### Create talk superuser in the eventyay-talk container
 ```bash
-# Initialize talk with EXACTLY THE SAME email and password as you used for pretix
-# This is critical for proper system integration
-docker exec -ti eventyay-talk bash -c "cd ~ && pretalx init && exit"
+# Execute this command in your host terminal to enter the talk container
+docker exec -ti eventyay-talk bash
 ```
 
-> **Critical:** You MUST use identical email address and password for both the pretix and pretalx superusers. The systems are integrated and rely on matching credentials. Also do not give root access for these commands they seem to mess things up
-
+>  Once inside the container, run:
+>  ```bash
+>  # Initialize talk system with a superuser account
+>  cd ~
+>  pretalx init
+>  # Type 'exit' when finished to return to your host terminal
+>  exit
+>  ```
 ## Accessing the System
 
-Visit `https://app.eventyay.com/tickets/` and log in with the user/password you defined above.
+Visit `https://app.eventyay.com/tickets/login` and log in with the user/password you defined above.
 
 After logging in to tickets, you should be able to go to `https://app.eventyay.com/talk/`, click on the login text, and get automatically logged in.
 
