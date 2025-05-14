@@ -4,6 +4,7 @@ services:
 
   talk:
     image: eventyay/eventyay-talk:local
+    platform: linux/amd64
     container_name: eventyay-talk
     restart: unless-stopped
     command: devel  # this translates to calling `pretalx devel` for startup
@@ -21,6 +22,7 @@ services:
 
   ticket:
     image: eventyay/eventyay-ticket:local
+    platform: linux/amd64
     container_name: eventyay-ticket
     restart: unless-stopped
     command: devel  # this translates to calling `pretix devel` for startup
@@ -39,6 +41,7 @@ services:
 
   video:
     image: eventyay/eventyay-video:local
+    platform: linux/amd64
     container_name: eventyay-video
     ports:
       - "8375:80"
@@ -63,6 +66,7 @@ services:
 
   video-webapp:
     image: eventyay/eventyay-video:local
+    platform: linux/amd64
     container_name: eventyay-video-webapp
     ports:
       - "8002:8880"
@@ -79,6 +83,7 @@ services:
 
   postgres:
     image: postgis/postgis:15-3.5
+    platform: linux/amd64
     container_name: eventyay-postgres
     restart: unless-stopped
     volumes:
@@ -100,6 +105,7 @@ services:
 
   redis:
     image: redis:latest
+    platform: linux/amd64
     container_name: eventyay-redis
     restart: unless-stopped
     volumes:
@@ -111,6 +117,7 @@ services:
   # for celery, while the second for whatever
   redis1:
     image: redis:latest
+    platform: linux/amd64
     container_name: eventyay-redis1
     restart: unless-stopped
     volumes:
@@ -121,6 +128,7 @@ services:
   nginx: # this is nginx + certbot, see https://github.com/JonasAlfredsson/docker-nginx-certbot
     restart: always
     image: jonasal/nginx-certbot:latest
+    platform: linux/amd64 
     container_name: eventyay-nginx
     ports:
       - 80:80
@@ -146,6 +154,7 @@ services:
 
   watchtower:
     image: containrrr/watchtower
+    platform: linux/amd64 
     container_name: eventyay-watchtower
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
