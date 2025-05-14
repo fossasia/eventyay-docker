@@ -4,9 +4,9 @@ This guide will help you set up the complete app.eventyay.com system locally for
 
 ## Prerequisites
 
-- Docker (May require installation if not already done)
+- Docker (May require installation if not already done)/Install Docker Desktop on MacOS enable rosetta translation in docker if on arm
 - Docker Compose
-- NPM/Node (May require installation if not already done)
+- NPM/Node (May require installation if not already done) on MacOS you can install it with homebrew
 - git
 
 ## Video Tutorial
