@@ -54,7 +54,7 @@ and use the same email and password as in pretix!!!!
 After that:
 * log into tickets
 * create SSO OAUTH key under Admin -> SSO Key for the correct domain
-* save client id and secret to pretix.cfg
+* save client id and secret to pretalx.cfg
 
 Start from scratch
 * the redis volumes need to be removed
