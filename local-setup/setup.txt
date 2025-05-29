@@ -1,0 +1,42 @@
+
+TICKET_PORT=8455
+TALK_PORT=8355
+VIDEO_PORT=8375
+VIDEO_WEBAPP_PORT=8002
+
+start nginx & postgres & redis x2
+----------
+docker compose up -d
+
+ticket
+-----
+pyenv virtualenv 3.11 ticket-local
+pyenv local ticket-local
+pip install -U pip in all
+pip3 install -e ".[dev]"
+cd src && ln -s ../../pretix.cfg .
+cd src && python manage.py collectstatic --noinput
+cd src && python manage.py migrate
+cd src && make npminstall
+cd src && python manage.py createsuperuser
+	# remember user/pass !!!
+cd src && python manage.py runserver $TICKET_PORT
+
+talk
+----
+# in a different shell
+pyenv virtualenv 3.11 talk-local
+pyenv local talk-local
+pip install -U pip in all
+export UV_NO_MANAGED_PYTHON=1
+uv sync --active
+cd src && ln -s ../../pretalx.cfg .
+cd src && python manage.py collectstatic --noinput
+cd src && python manage.py migrate
+cd src && python manage.py init
+	# use same user/pass
+cd src && python manage.py runserver $TALK_PORT
+
+
+
+
