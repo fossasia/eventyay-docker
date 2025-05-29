@@ -1,4 +1,12 @@
 
+/etc/hosts setup
+---------------
+add an entry
+	127.0.0.1	eventyay.localnet
+to your /etc/hosts (on linux, no idea about other OSs)
+
+
+
 TICKET_PORT=8455
 TALK_PORT=8355
 VIDEO_PORT=8375
