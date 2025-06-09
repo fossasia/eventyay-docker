@@ -213,4 +213,4 @@ If you encounter issues with the login or connections between services, ensure:
 3. You've properly initialized both the ticket and talk systems with identical credentials.
 4. If using Windows WSL, consider switching to a native Ubuntu 22.04+ installation for better Docker compatibility.
 5. Docker networking can sometimes be problematic with WSL - if you experience connectivity issues, try restarting the Docker service.
-6. If you are having problem with user creation due to data directory permissions it is highly likely that you have done something wrong in step 3 of building and configration.
+ 6. If you are having problem with user creation due to data directory permissions it is highly likely that you have done something wrong in step 3 of building and configuration.
