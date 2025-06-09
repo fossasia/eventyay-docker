@@ -140,6 +140,11 @@ sudo apt install --fix-broken -y
 sudo dpkg -i google-chrome-stable_current_amd64.deb
 ```
 
+Chrome in WSL can be accessed by (if installed inside WSL):
+```
+google-chrome app.eventyay.com
+```
+
 ## Launching the Application
 
 ### 1. Start the Containers
