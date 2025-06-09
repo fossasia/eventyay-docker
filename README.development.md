@@ -195,7 +195,7 @@ docker exec -ti eventyay-talk bash
 
 ## Accessing the System
 
-Visit `https://app.eventyay.com/tickets/login` and log in with the user/password you defined above.
+Visit `https://app.eventyay.com/tickets/` and log in with the user/password you defined above.
 
 After logging in to tickets, you should be able to go to `https://app.eventyay.com/talk/`, click on the login text, and get automatically logged in.
 
