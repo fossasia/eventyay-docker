@@ -201,7 +201,7 @@ After logging in to tickets, you should be able to go to `https://app.eventyay.c
 
 ## Development Workflow
 
-- Changes to Python code and templates should be reflected immediately in the docker containers and visible in the browser after reload.
+- Changes to Python code and templates should be reflected immediately in the docker containers and visible in the browser after container reload, if not immediately.
 - Changes to JavaScript pages may require rebuilds (Not Much Info Here).
 
 ## Troubleshooting
