@@ -115,7 +115,7 @@ cp .env.example .env
 
 **->Add the following entries to your `/etc/hosts` file:**
 
-```
+```bash
 grep -qxF "127.0.0.1  app.eventyay.com" /etc/hosts || echo "127.0.0.1  app.eventyay.com" | sudo tee -a /etc/hosts
 grep -qxF "127.0.0.1  video.eventyay.com" /etc/hosts || echo "127.0.0.1  video.eventyay.com" | sudo tee -a /etc/hosts
 ```
@@ -124,15 +124,15 @@ Alternatively, you can change all hostnames in the configuration files in `docke
 
 **->WSL users should run an elevated command prompt in order to add entries to windows hosts:**
 
-```
+```cmd
 findstr /C:"127.0.0.1  app.eventyay.com" %SystemRoot%\System32\drivers\etc\hosts >nul 2>&1 && echo Already exists: app.eventyay.com || (echo 127.0.0.1  app.eventyay.com>>%SystemRoot%\System32\drivers\etc\hosts && echo Added: app.eventyay.com)
 
 findstr /C:"127.0.0.1  video.eventyay.com" %SystemRoot%\System32\drivers\etc\hosts >nul 2>&1 && echo Already exists: video.eventyay.com || (echo 127.0.0.1  video.eventyay.com>>%SystemRoot%\System32\drivers\etc\hosts && echo Added: video.eventyay.com)
 ```
 
-**->WSL users can alternatively install chrome inside wsl which will show as a seperate browser in windows but there may be performance issues**
+**->WSL users can alternatively install chrome inside wsl which will show as a separate browser in windows but there may be performance issues**
 
-```
+```bash
 cd /tmp
 sudo wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
 sudo dpkg -i google-chrome-stable_current_amd64.deb
@@ -141,7 +141,7 @@ sudo dpkg -i google-chrome-stable_current_amd64.deb
 ```
 
 Chrome in WSL can be accessed by (if installed inside WSL):
-```
+```bash
 google-chrome app.eventyay.com
 ```
 
